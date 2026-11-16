@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard | Admin — Joey Tahian</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="../assets/css/style.css">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+</head>
+<body class="bg-light text-dark">
+
+    <!-- Admin Navbar -->
+    <nav class="navbar navbar-expand-lg navbar-light navbar-glass">
+        <div class="container-fluid px-4 px-lg-5">
+            <a class="navbar-brand fw-bold fs-5 text-dark" href="dashboard.html">
+                <i class="fa-solid fa-scissors me-2 text-gradient"></i>Admin Workspace
+            </a>
+            <button class="navbar-toggler border-0" type="button" data-bs-toggle="collapse" data-bs-target="#adminNav">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="adminNav">
+                <ul class="navbar-nav me-auto ms-3 gap-1">
+                    <li class="nav-item"><a class="nav-link fw-bold text-dark" href="dashboard.html"><i class="fa-solid fa-chart-pie me-2"></i>Dashboard</a></li>
+                    <li class="nav-item"><a class="nav-link fw-semibold text-secondary" href="inventory.html"><i class="fa-solid fa-boxes-stacked me-2"></i>Inventory</a></li>
+                    <li class="nav-item"><a class="nav-link fw-semibold text-secondary" href="orders.html"><i class="fa-solid fa-cart-flatbed me-2"></i>Orders</a></li>
+                    <li class="nav-item"><a class="nav-link fw-semibold text-secondary" href="quotes.html"><i class="fa-solid fa-file-invoice-dollar me-2"></i>Quotes</a></li>
+                    <li class="nav-item"><a class="nav-link fw-semibold text-secondary" href="reports.html"><i class="fa-solid fa-file-export me-2"></i>Reports</a></li>
+                </ul>
+                <button class="btn btn-outline-dark btn-sm rounded-pill px-4" id="logoutBtn">
+                    <i class="fa-solid fa-power-off me-2"></i>Logout
+                </button>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Content -->
+    <div class="container-fluid px-4 px-lg-5 py-5 animate-fade-up">
+
+        <!-- Page title row -->
+        <div class="d-flex justify-content-between align-items-center mb-4">
+            <div>
+                <h2 class="fw-bold mb-1" style="letter-spacing:-0.02em;">Performance Overview</h2>
+                <p class="text-secondary mb-0" style="font-size:0.9rem;">Real-time sales and order statistics.</p>
+            </div>
+            <span class="badge bg-success bg-opacity-10 text-success border border-success border-opacity-50 px-3 py-2 rounded-pill">
+                <i class="fa-solid fa-circle-check me-1"></i>Live Data
+            </span>
+        </div>
+
+        <!-- Stat Cards -->
+        <div class="row g-4 mb-4">
+            <div class="col-sm-6 col-xl-3">
+                <div class="glass-card no-hover h-100 position-relative overflow-hidden">
+                    <div class="position-absolute top-0 end-0 p-3 opacity-10">
+                        <i class="fa-solid fa-calendar-day" style="font-size:4rem;"></i>
+                    </div>
+                    <p class="section-label mb-2">Today</p>
+                    <h3 class="fw-bold text-gradient mb-1" id="salesDay">₱0.00</h3>
+                    <p class="text-secondary mb-0" style="font-size:0.88rem;" id="ordersDay">0 Orders</p>
+                </div>
+            </div>
+            <div class="col-sm-6 col-xl-3">
+                <div class="glass-card no-hover h-100 position-relative overflow-hidden">
+                    <div class="position-absolute top-0 end-0 p-3 opacity-10">
+                        <i class="fa-solid fa-calendar-week" style="font-size:4rem;"></i>
+                    </div>
+                    <p class="section-label mb-2">This Week</p>
+                    <h3 class="fw-bold mb-1" id="salesWeek">₱0.00</h3>
+                    <p class="text-secondary mb-0" style="font-size:0.88rem;" id="ordersWeek">0 Orders</p>
+                </div>
+            </div>
+            <div class="col-sm-6 col-xl-3">
+                <div class="glass-card no-hover h-100 position-relative overflow-hidden">
+                    <div class="position-absolute top-0 end-0 p-3 opacity-10">
+                        <i class="fa-solid fa-calendar-days" style="font-size:4rem;"></i>
+                    </div>
+                    <p class="section-label mb-2">This Month</p>
+                    <h3 class="fw-bold mb-1" id="salesMonth">₱0.00</h3>
+                    <p class="text-secondary mb-0" style="font-size:0.88rem;" id="ordersMonth">0 Orders</p>
+                </div>
+            </div>
+            <div class="col-sm-6 col-xl-3">
+                <div class="glass-card no-hover h-100 position-relative overflow-hidden">
+                    <div class="position-absolute top-0 end-0 p-3 opacity-10">
+                        <i class="fa-solid fa-calendar" style="font-size:4rem;"></i>
+                    </div>
+                    <p class="section-label mb-2">This Year</p>
+                    <h3 class="fw-bold mb-1" id="salesYear">₱0.00</h3>
+                    <p class="text-secondary mb-0" style="font-size:0.88rem;" id="ordersYear">0 Orders</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="glass-card no-hover d-flex flex-wrap align-items-center justify-content-between gap-3 mb-4 py-3">
+            <div>
+                <p class="section-label mb-1">Email Confirmations</p>
+                <strong class="fs-5" id="emailConfirmedOrders">Loading…</strong>
+                <span class="text-secondary ms-2" id="pendingConfirmations"></span>
+            </div>
+            <a href="orders.html" class="btn btn-outline-dark rounded-pill px-4">View Orders</a>
+        </div>
+
+        <!-- Chart -->
+        <div class="glass-card no-hover">
+            <div class="d-flex justify-content-between align-items-center mb-4">
+                <div>
+                    <h5 class="fw-bold mb-0">Sales Overview</h5>
+                    <p class="text-secondary mb-0" style="font-size:0.85rem;">Revenue comparison across time periods</p>
+                </div>
+            </div>
+            <canvas id="salesChart" height="100"></canvas>
+        </div>
+
+    </div>
+
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="../assets/js/api.js?v=5"></script>
+    <script src="../assets/js/dashboard.js?v=4"></script>
+</body>
+</html>

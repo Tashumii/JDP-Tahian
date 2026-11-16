@@ -1,0 +1,176 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Inventory | Admin — Joey Tahian</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="../assets/css/style.css">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+</head>
+<body class="bg-light text-dark">
+
+    <!-- Admin Navbar -->
+    <nav class="navbar navbar-expand-lg navbar-light navbar-glass">
+        <div class="container-fluid px-4 px-lg-5">
+            <a class="navbar-brand fw-bold fs-5 text-dark" href="dashboard.html">
+                <i class="fa-solid fa-scissors me-2 text-gradient"></i>Admin Workspace
+            </a>
+            <button class="navbar-toggler border-0" type="button" data-bs-toggle="collapse" data-bs-target="#adminNav">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="adminNav">
+                <ul class="navbar-nav me-auto ms-3 gap-1">
+                    <li class="nav-item"><a class="nav-link fw-semibold text-secondary" href="dashboard.html"><i class="fa-solid fa-chart-pie me-2"></i>Dashboard</a></li>
+                    <li class="nav-item"><a class="nav-link fw-bold text-dark" href="inventory.html"><i class="fa-solid fa-boxes-stacked me-2"></i>Inventory</a></li>
+                    <li class="nav-item"><a class="nav-link fw-semibold text-secondary" href="orders.html"><i class="fa-solid fa-cart-flatbed me-2"></i>Orders</a></li>
+                    <li class="nav-item"><a class="nav-link fw-semibold text-secondary" href="quotes.html"><i class="fa-solid fa-file-invoice-dollar me-2"></i>Quotes</a></li>
+                    <li class="nav-item"><a class="nav-link fw-semibold text-secondary" href="reports.html"><i class="fa-solid fa-file-export me-2"></i>Reports</a></li>
+                </ul>
+                <button class="btn btn-outline-dark btn-sm rounded-pill px-4" id="logoutBtn">
+                    <i class="fa-solid fa-power-off me-2"></i>Logout
+                </button>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Content -->
+    <div class="container-fluid px-4 px-lg-5 py-5 animate-fade-up">
+
+        <div class="d-flex justify-content-between align-items-center mb-4">
+            <div>
+                <h2 class="fw-bold mb-1" style="letter-spacing:-0.02em;">Inventory Management</h2>
+                <p class="text-secondary mb-0" style="font-size:0.9rem;">Add, edit, or manage your product stock.</p>
+            </div>
+            <button class="btn btn-modern rounded-pill px-4" data-bs-toggle="modal" data-bs-target="#inventoryModal" id="btnAddItem">
+                <i class="fa-solid fa-plus me-2"></i>Add New Item
+            </button>
+        </div>
+
+        <div class="glass-card no-hover p-0 overflow-hidden">
+            <div class="table-responsive">
+                <table class="table table-glass mb-0" id="inventoryTable">
+                    <thead>
+                        <tr>
+                            <th>ID</th>
+                            <th>Image</th>
+                            <th>Name</th>
+                            <th>Category</th>
+                            <th>Price</th>
+                            <th>Qty</th>
+                            <th>Stage</th>
+                            <th>Condition</th>
+                            <th class="text-end">Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr><td colspan="9" class="text-center text-secondary py-4"><span class="spinner-border spinner-border-sm me-2"></span>Loading…</td></tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+    <!-- Add/Edit Modal -->
+    <div class="modal fade" id="inventoryModal" tabindex="-1">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content glass-card shadow-lg" style="padding:0;">
+                <form id="inventoryForm" novalidate>
+                    <div class="modal-header">
+                        <h5 class="modal-title fw-bold" id="inventoryModalLabel">Add New Item</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                    </div>
+                    <div class="modal-body">
+                        <input type="hidden" id="itemId" name="id">
+
+                        <div class="mb-3">
+                            <label class="form-label">Item Name</label>
+                            <input type="text" class="form-control glass-input" id="itemName" name="name" required placeholder="e.g. Queen Size Bedsheet Set">
+                        </div>
+
+                        <div class="mb-3">
+                            <label class="form-label">Image URL (Optional)</label>
+                            <input type="url" class="form-control glass-input" id="itemImageUrl" name="image_url" placeholder="https://example.com/image.jpg">
+                        </div>
+
+                        <div class="row g-3">
+                            <div class="col-md-6 mb-0">
+                                <label class="form-label">Category</label>
+                                <input type="text" class="form-control glass-input" id="itemCategory" name="category" required placeholder="e.g. Blankets">
+                            </div>
+                            <div class="col-md-6 mb-0">
+                                <label class="form-label">Price (₱)</label>
+                                <input type="number" step="0.01" class="form-control glass-input" id="itemPrice" name="price" required placeholder="0.00">
+                            </div>
+                        </div>
+
+                        <div class="row g-3 mt-0">
+                            <div class="col-md-4 mb-0">
+                                <label class="form-label">Quantity</label>
+                                <input type="number" class="form-control glass-input" id="itemQty" name="quantity" required placeholder="0">
+                            </div>
+                            <div class="col-md-4 mb-0">
+                                <label class="form-label">Stage</label>
+                                <select class="form-select glass-input" id="itemStage" name="stage">
+                                    <option value="made">Made</option>
+                                    <option value="packed">Packed</option>
+                                    <option value="on_hand">On Hand</option>
+                                </select>
+                            </div>
+                            <div class="col-md-4 mb-0">
+                                <label class="form-label">Condition</label>
+                                <select class="form-select glass-input" id="itemCondition" name="item_condition">
+                                    <option value="new">New</option>
+                                    <option value="returned_good">Returned (Good)</option>
+                                    <option value="returned_damaged">Returned (Damaged)</option>
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-outline-secondary rounded-pill px-4" data-bs-dismiss="modal">Cancel</button>
+                        <button type="submit" class="btn btn-modern rounded-pill px-5">Save Changes</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <!-- Return Modal -->
+    <div class="modal fade" id="returnModal" tabindex="-1">
+        <div class="modal-dialog">
+            <div class="modal-content glass-card shadow-lg" style="padding:0;">
+                <form id="returnForm" novalidate>
+                    <div class="modal-header">
+                        <h5 class="modal-title fw-bold">Log Return</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                    </div>
+                    <div class="modal-body">
+                        <input type="hidden" id="returnItemId" name="id">
+                        <div class="mb-3">
+                            <label class="form-label">Quantity Returned</label>
+                            <input type="number" min="1" class="form-control glass-input" id="returnQty" name="quantity" required placeholder="1">
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label">Condition</label>
+                            <select class="form-select glass-input" id="returnCondition" name="condition">
+                                <option value="returned_good">Returned — Good (Will restock)</option>
+                                <option value="returned_damaged">Returned — Damaged (Do not restock)</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-outline-secondary rounded-pill px-4" data-bs-dismiss="modal">Cancel</button>
+                        <button type="submit" class="btn btn-warning rounded-pill px-5 fw-bold text-dark">Log Return</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="../assets/js/api.js?v=5"></script>
+    <script src="../assets/js/inventory.js?v=4"></script>
+</body>
+</html>

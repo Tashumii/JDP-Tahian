@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Quote Requests | Admin — Joey Tahian</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="../assets/css/style.css">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+</head>
+<body class="bg-light text-dark">
+    <nav class="navbar navbar-expand-lg navbar-light navbar-glass">
+        <div class="container-fluid px-4 px-lg-5">
+            <a class="navbar-brand fw-bold fs-5 text-dark" href="dashboard.html"><i class="fa-solid fa-scissors me-2 text-gradient"></i>Admin Workspace</a>
+            <button class="navbar-toggler border-0" type="button" data-bs-toggle="collapse" data-bs-target="#adminNav"><span class="navbar-toggler-icon"></span></button>
+            <div class="collapse navbar-collapse" id="adminNav">
+                <ul class="navbar-nav me-auto ms-3 gap-1">
+                    <li class="nav-item"><a class="nav-link fw-semibold text-secondary" href="dashboard.html"><i class="fa-solid fa-chart-pie me-2"></i>Dashboard</a></li>
+                    <li class="nav-item"><a class="nav-link fw-semibold text-secondary" href="inventory.html"><i class="fa-solid fa-boxes-stacked me-2"></i>Inventory</a></li>
+                    <li class="nav-item"><a class="nav-link fw-semibold text-secondary" href="orders.html"><i class="fa-solid fa-cart-flatbed me-2"></i>Orders</a></li>
+                    <li class="nav-item"><a class="nav-link fw-bold text-dark" href="quotes.html"><i class="fa-solid fa-file-invoice-dollar me-2"></i>Quotes</a></li>
+                    <li class="nav-item"><a class="nav-link fw-semibold text-secondary" href="reports.html"><i class="fa-solid fa-file-export me-2"></i>Reports</a></li>
+                </ul>
+                <button class="btn btn-outline-dark btn-sm rounded-pill px-4" id="logoutBtn"><i class="fa-solid fa-power-off me-2"></i>Logout</button>
+            </div>
+        </div>
+    </nav>
+
+    <main class="container-fluid px-4 px-lg-5 py-5 animate-fade-up">
+        <div class="d-flex justify-content-between align-items-center mb-4">
+            <div>
+                <h2 class="fw-bold mb-1">Quote Requests</h2>
+                <p class="text-secondary mb-0" style="font-size:0.9rem;">Review customer requests and move them through follow-up.</p>
+            </div>
+            <button class="btn btn-outline-dark rounded-pill px-4" id="refreshQuotes"><i class="fa-solid fa-rotate me-2"></i>Refresh</button>
+        </div>
+
+        <div id="quotesError" class="alert alert-danger d-none" role="alert"></div>
+        <div class="glass-card no-hover p-0 overflow-hidden">
+            <div class="table-responsive">
+                <table class="table table-glass mb-0" id="quotesTable">
+                    <thead>
+                        <tr><th>ID</th><th>Customer</th><th>Contact</th><th>Request</th><th>Status</th><th>Date</th><th class="text-end">Action</th></tr>
+                    </thead>
+                    <tbody><tr><td colspan="7" class="text-center text-secondary py-4"><span class="spinner-border spinner-border-sm me-2"></span>Loading…</td></tr></tbody>
+                </table>
+            </div>
+        </div>
+    </main>
+
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="../assets/js/api.js?v=5"></script>
+    <script>
+        $(function() {
+            const nextStatus = { pending: 'reviewed', reviewed: 'contacted', contacted: 'closed', closed: null };
+            const nextLabel = { reviewed: 'Mark reviewed', contacted: 'Mark contacted', closed: 'Close request' };
+            const statusStyle = {
+                pending: 'secondary', reviewed: 'info', contacted: 'primary', closed: 'success'
+            };
+
+            function escapeHtml(value) {
+                return $('<div>').text(value == null ? '' : String(value)).html();
+            }
+
+            function loadQuotes() {
+                const tbody = $('#quotesTable tbody');
+                $('#quotesError').addClass('d-none').text('');
+                tbody.html('<tr><td colspan="7" class="text-center text-secondary py-4"><span class="spinner-border spinner-border-sm me-2"></span>Loading…</td></tr>');
+                api('quotes/list.php').done(function(response) {
+                    tbody.empty();
+                    const quotes = Array.isArray(response.data) ? response.data : [];
+                    if (!quotes.length) {
+                        tbody.html('<tr><td colspan="7" class="text-center text-secondary py-5"><i class="fa-solid fa-inbox fs-2 d-block opacity-30 mb-2"></i>No quote requests yet.</td></tr>');
+                        return;
+                    }
+
+                    quotes.forEach(function(quote) {
+                        const next = nextStatus[quote.status];
+                        const color = statusStyle[quote.status] || 'secondary';
+                        const action = next
+                            ? `<button type="button" class="btn btn-sm btn-outline-dark rounded-pill px-3 btn-advance" data-id="${Number(quote.id)}" data-status="${next}">${nextLabel[next]}</button>`
+                            : '<span class="text-secondary">Complete</span>';
+                        tbody.append(`
+                            <tr>
+                                <td class="text-secondary">${Number(quote.id)}</td>
+                                <td class="fw-semibold">${escapeHtml(quote.customer_name)}</td>
+                                <td>${escapeHtml(quote.contact)}</td>
+                                <td style="min-width:260px;white-space:pre-wrap;">${escapeHtml(quote.requested_items)}</td>
+                                <td><span class="badge bg-${color} bg-opacity-10 text-${color} border border-${color} border-opacity-50" style="text-transform:capitalize;">${escapeHtml(quote.status)}</span></td>
+                                <td class="text-secondary" style="font-size:0.82rem;white-space:nowrap;">${escapeHtml(quote.created_at)}</td>
+                                <td class="text-end">${action}</td>
+                            </tr>`);
+                    });
+                }).fail(function(xhr) {
+                    tbody.html('<tr><td colspan="7" class="text-center text-secondary py-4">Quote requests could not be loaded.</td></tr>');
+                    $('#quotesError').text(xhr.responseJSON && xhr.responseJSON.message ? xhr.responseJSON.message : 'Unable to load quote requests.').removeClass('d-none');
+                });
+            }
+
+            loadQuotes();
+            $('#refreshQuotes').on('click', loadQuotes);
+            $('#quotesTable').on('click', '.btn-advance', function() {
+                const button = $(this);
+                button.prop('disabled', true);
+                api('quotes/update_status.php', 'POST', { id: Number(button.data('id')), status: button.data('status') })
+                    .done(loadQuotes)
+                    .fail(function(xhr) {
+                        button.prop('disabled', false);
+                        $('#quotesError').text(xhr.responseJSON && xhr.responseJSON.message ? xhr.responseJSON.message : 'Unable to update this request.').removeClass('d-none');
+                    });
+            });
+            $('#logoutBtn').on('click', function() {
+                api('auth/logout.php', 'POST').done(function() { window.location.href = 'login.html'; });
+            });
+        });
+    </script>
+</body>
+</html>

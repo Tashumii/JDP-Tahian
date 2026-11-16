@@ -1,0 +1,536 @@
+/* ============================================
+   JOEY TAHIAN – SEWING SHOP
+   Global Design System with Proper Spacing
+   ============================================ */
+
+/* ── Variables ── */
+:root {
+    --bg-color: #f4f6f9;
+    --bg-secondary: #eef0f5;
+    --card-bg: rgba(255, 255, 255, 0.85);
+    --card-border: rgba(0, 0, 0, 0.09);
+    --card-shadow: 0 4px 24px rgba(0, 0, 0, 0.07);
+    --text-primary: #1a1d2e;
+    --text-secondary: #5c6480;
+    --text-muted: #9199b1;
+    --accent-gradient: linear-gradient(135deg, #6366f1 0%, #a855f7 100%);
+    --accent-color: #8b5cf6;
+    --accent-light: rgba(139, 92, 246, 0.12);
+    --success-color: #10b981;
+    --danger-color: #ef4444;
+    --warning-color: #f59e0b;
+    --glass-blur: blur(20px);
+    --radius-sm: 10px;
+    --radius-md: 16px;
+    --radius-lg: 24px;
+    --radius-xl: 32px;
+    --space-xs: 0.5rem;
+    --space-sm: 0.75rem;
+    --space-md: 1.25rem;
+    --space-lg: 2rem;
+    --space-xl: 3rem;
+    --space-2xl: 5rem;
+}
+
+/* ── Reset & Base ── */
+*, *::before, *::after { box-sizing: border-box; }
+
+body {
+    background-color: var(--bg-color);
+    color: var(--text-primary);
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+    font-size: 1rem;
+    line-height: 1.6;
+    -webkit-font-smoothing: antialiased;
+    margin: 0;
+    overflow-x: hidden;
+}
+
+/* ── Navbar ── */
+.navbar-glass {
+    background: rgba(255, 255, 255, 0.82) !important;
+    backdrop-filter: var(--glass-blur);
+    border-bottom: 1px solid var(--card-border);
+    position: sticky;
+    top: 0;
+    z-index: 1000;
+    padding-top: 1rem !important;
+    padding-bottom: 1rem !important;
+}
+
+.navbar-brand {
+    font-size: 1.25rem !important;
+    letter-spacing: -0.02em;
+    gap: 0.5rem;
+}
+
+.nav-link {
+    padding: 0.5rem 0.75rem !important;
+    border-radius: var(--radius-sm);
+    transition: background 0.2s ease;
+}
+
+.nav-link:hover {
+    background: rgba(0, 0, 0, 0.05);
+}
+
+/* ── Hero ── */
+.hero-section {
+    min-height: 88vh;
+    display: flex;
+    align-items: center;
+    position: relative;
+    overflow: hidden;
+    padding: var(--space-2xl) 0;
+}
+
+.hero-glow {
+    position: absolute;
+    width: 700px;
+    height: 700px;
+    background: var(--accent-gradient);
+    filter: blur(140px);
+    opacity: 0.12;
+    border-radius: 50%;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    z-index: 0;
+    pointer-events: none;
+}
+
+.hero-content {
+    position: relative;
+    z-index: 1;
+    text-align: center;
+}
+
+/* ── Typography ── */
+.text-gradient {
+    background: var(--accent-gradient);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    display: inline-block;
+}
+
+.display-1 {
+    font-weight: 800;
+    letter-spacing: -0.04em;
+    line-height: 1.1;
+}
+
+.display-4 {
+    font-weight: 800;
+    letter-spacing: -0.03em;
+    line-height: 1.15;
+}
+
+.display-5 {
+    font-weight: 800;
+    letter-spacing: -0.02em;
+}
+
+/* ── Section Spacing ── */
+.section-gap {
+    padding: var(--space-2xl) 0;
+}
+
+.section-gap-sm {
+    padding: var(--space-xl) 0;
+}
+
+/* ── Glass Cards ── */
+.glass-card {
+    background: var(--card-bg);
+    backdrop-filter: var(--glass-blur);
+    -webkit-backdrop-filter: var(--glass-blur);
+    border: 1px solid var(--card-border);
+    border-radius: var(--radius-lg);
+    padding: var(--space-lg);
+    box-shadow: var(--card-shadow);
+    transition: transform 0.3s ease, border-color 0.3s ease, box-shadow 0.3s ease;
+}
+
+.glass-card:hover {
+    transform: translateY(-4px);
+    border-color: rgba(0, 0, 0, 0.14);
+    box-shadow: 0 16px 40px rgba(0, 0, 0, 0.11);
+}
+
+/* Admin table card – don't lift on hover */
+.glass-card.no-hover:hover {
+    transform: none;
+    box-shadow: var(--card-shadow);
+}
+
+/* ── Bento Grid ── */
+.bento-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+    gap: 1.75rem;
+}
+
+.bento-item {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+}
+
+/* ── Product Cards ── */
+.product-price {
+    font-size: 1.4rem;
+    font-weight: 700;
+    color: var(--text-primary);
+    letter-spacing: -0.01em;
+}
+
+.product-stock {
+    font-size: 0.8rem;
+    font-weight: 600;
+    padding: 5px 12px;
+    border-radius: 20px;
+    display: inline-flex;
+    align-items: center;
+    gap: 5px;
+}
+
+/* ── Form & Inputs ── */
+.glass-input {
+    background: rgba(255, 255, 255, 0.9) !important;
+    border: 1.5px solid var(--card-border) !important;
+    color: var(--text-primary) !important;
+    border-radius: var(--radius-sm) !important;
+    padding: 0.85rem 1.1rem !important;
+    font-size: 0.95rem !important;
+    line-height: 1.5 !important;
+    transition: border-color 0.2s ease, box-shadow 0.2s ease !important;
+}
+
+.glass-input:focus {
+    background: #ffffff !important;
+    border-color: var(--accent-color) !important;
+    box-shadow: 0 0 0 4px rgba(139, 92, 246, 0.15) !important;
+    outline: none !important;
+}
+
+.glass-input::placeholder {
+    color: var(--text-muted) !important;
+    font-size: 0.9rem !important;
+}
+
+/* Select dropdowns */
+select.glass-input {
+    appearance: auto !important;
+    cursor: pointer;
+}
+
+/* Textarea */
+textarea.glass-input {
+    resize: vertical;
+    min-height: 100px;
+}
+
+.form-label {
+    font-weight: 600;
+    font-size: 0.82rem !important;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    color: var(--text-secondary) !important;
+    margin-bottom: 0.5rem !important;
+}
+
+/* Form groups – consistent vertical spacing */
+.form-group,
+.mb-3 {
+    margin-bottom: 1.25rem !important;
+}
+
+.mb-4 {
+    margin-bottom: 1.75rem !important;
+}
+
+/* ── Buttons ── */
+.btn-modern {
+    color: white !important;
+    background: var(--accent-gradient);
+    border: none;
+    border-radius: var(--radius-md);
+    font-weight: 600;
+    font-size: 0.95rem;
+    padding: 0.8rem 1.6rem;
+    letter-spacing: 0.01em;
+    transition: opacity 0.25s ease, transform 0.2s ease, box-shadow 0.25s ease;
+    box-shadow: 0 4px 16px rgba(139, 92, 246, 0.3);
+}
+
+.btn-modern:hover {
+    opacity: 0.92;
+    transform: translateY(-2px);
+    box-shadow: 0 8px 24px rgba(139, 92, 246, 0.4);
+}
+
+.btn-modern:active {
+    transform: translateY(0);
+}
+
+/* ── Quantity Controls ── */
+.qty-control {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    background: rgba(0, 0, 0, 0.05);
+    border-radius: var(--radius-sm);
+    padding: 6px 10px;
+    border: 1px solid var(--card-border);
+}
+
+.qty-btn {
+    background: white;
+    border: 1px solid var(--card-border);
+    color: var(--text-primary);
+    width: 32px;
+    height: 32px;
+    border-radius: 8px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    font-size: 0.85rem;
+    transition: background 0.2s, border-color 0.2s;
+    flex-shrink: 0;
+}
+
+.qty-btn:hover {
+    background: var(--accent-light);
+    border-color: var(--accent-color);
+    color: var(--accent-color);
+}
+
+.qty-input {
+    background: transparent;
+    border: none;
+    color: var(--text-primary);
+    width: 36px;
+    text-align: center;
+    font-weight: 700;
+    font-size: 0.95rem;
+    outline: none;
+    -moz-appearance: textfield;
+}
+
+.qty-input::-webkit-outer-spin-button,
+.qty-input::-webkit-inner-spin-button {
+    -webkit-appearance: none;
+    margin: 0;
+}
+
+/* ── Admin Table ── */
+.table-glass,
+.table-glass td,
+.table-glass th {
+    color: var(--text-primary) !important;
+    vertical-align: middle;
+}
+
+.table-glass thead th {
+    background: rgba(0, 0, 0, 0.03);
+    border-bottom: 2px solid var(--card-border);
+    color: var(--text-secondary) !important;
+    font-weight: 700;
+    text-transform: uppercase;
+    font-size: 0.74rem;
+    letter-spacing: 0.08em;
+    padding: 1rem 1.25rem;
+    white-space: nowrap;
+}
+
+.table-glass tbody td {
+    background: transparent;
+    border-bottom: 1px solid rgba(0, 0, 0, 0.05);
+    padding: 1rem 1.25rem;
+    font-size: 0.93rem;
+}
+
+.table-glass tbody tr:last-child td {
+    border-bottom: none;
+}
+
+.table-glass tbody tr:hover td {
+    background: rgba(99, 102, 241, 0.03);
+}
+
+/* ── Badges ── */
+.badge {
+    font-weight: 600;
+    font-size: 0.75rem;
+    letter-spacing: 0.04em;
+    padding: 0.4em 0.9em;
+    border-radius: 20px;
+}
+
+/* ── Admin Modal ── */
+.modal-content.glass-card {
+    border-radius: var(--radius-lg) !important;
+    padding: 0;
+}
+
+.modal-header {
+    padding: 1.5rem 1.75rem 1rem !important;
+    border-bottom: 1px solid var(--card-border) !important;
+}
+
+.modal-body {
+    padding: 1.5rem 1.75rem !important;
+}
+
+.modal-footer {
+    padding: 1rem 1.75rem 1.5rem !important;
+    border-top: 1px solid var(--card-border) !important;
+    gap: 0.75rem;
+}
+
+/* ── Page Headers ── */
+.page-header {
+    padding: var(--space-xl) 0 var(--space-lg);
+}
+
+.page-header h1,
+.page-header h2 {
+    margin-bottom: 0.6rem;
+}
+
+/* ── Scrollbar ── */
+::-webkit-scrollbar { width: 8px; }
+::-webkit-scrollbar-track { background: var(--bg-color); }
+::-webkit-scrollbar-thumb {
+    background: rgba(0, 0, 0, 0.15);
+    border-radius: 4px;
+}
+::-webkit-scrollbar-thumb:hover { background: rgba(0, 0, 0, 0.25); }
+
+/* ── Animations ── */
+@keyframes fadeInUp {
+    from { opacity: 0; transform: translateY(28px); }
+    to   { opacity: 1; transform: translateY(0); }
+}
+
+.animate-fade-up {
+    animation: fadeInUp 0.75s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
+
+.delay-1 { animation-delay: 0.1s; opacity: 0; }
+.delay-2 { animation-delay: 0.22s; opacity: 0; }
+.delay-3 { animation-delay: 0.34s; opacity: 0; }
+
+/* ── FAQ ── */
+.faq-section {
+    padding-top: var(--space-2xl);
+    padding-bottom: var(--space-2xl);
+}
+
+.faq-card {
+    background: rgba(255, 255, 255, 0.7);
+    border: 1px solid var(--card-border);
+    border-radius: var(--radius-md);
+    margin-bottom: 0.85rem;
+    overflow: hidden;
+    backdrop-filter: var(--glass-blur);
+    transition: background 0.3s ease, border-color 0.3s ease;
+}
+
+.faq-card:hover {
+    background: white;
+    border-color: rgba(0, 0, 0, 0.13);
+}
+
+.faq-card summary {
+    padding: 1.4rem 1.6rem;
+    font-size: 1rem;
+    font-weight: 600;
+    cursor: pointer;
+    list-style: none;
+    position: relative;
+    color: var(--text-primary);
+    padding-right: 3.5rem;
+}
+
+.faq-card summary::-webkit-details-marker { display: none; }
+
+.faq-card summary::after {
+    content: '+';
+    position: absolute;
+    right: 1.5rem;
+    top: 50%;
+    transform: translateY(-50%);
+    font-size: 1.3rem;
+    color: var(--accent-color);
+    transition: transform 0.3s ease;
+    line-height: 1;
+}
+
+.faq-card[open] summary::after {
+    transform: translateY(-50%) rotate(45deg);
+}
+
+.faq-card .faq-content {
+    padding: 0 1.6rem 1.4rem;
+    color: var(--text-secondary);
+    line-height: 1.65;
+    animation: fadeDown 0.3s ease;
+}
+
+@keyframes fadeDown {
+    from { opacity: 0; transform: translateY(-8px); }
+    to   { opacity: 1; transform: translateY(0); }
+}
+
+/* ── Recommendation Items (Quote page) ── */
+.recommendation-item {
+    background: rgba(255, 255, 255, 0.7);
+    border: 1px solid var(--card-border);
+    border-radius: var(--radius-sm);
+    padding: 1rem 1.1rem;
+    margin-bottom: 0.65rem;
+    transition: background 0.2s ease, border-color 0.2s ease;
+    cursor: default;
+}
+
+.recommendation-item:hover {
+    background: white;
+    border-color: rgba(139, 92, 246, 0.25);
+}
+
+/* ── Utility Helpers ── */
+.section-label {
+    font-size: 0.8rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    color: var(--text-muted);
+    margin-bottom: var(--space-sm);
+}
+
+.divider-soft {
+    border: none;
+    border-top: 1px solid var(--card-border);
+    margin: var(--space-lg) 0;
+}
+
+/* ── Responsive tweaks ── */
+@media (max-width: 768px) {
+    :root {
+        --space-lg: 1.5rem;
+        --space-xl: 2rem;
+        --space-2xl: 3.5rem;
+    }
+
+    .display-1 { font-size: 2.4rem !important; }
+    .display-4 { font-size: 2rem !important; }
+    .bento-grid { grid-template-columns: 1fr; gap: 1.25rem; }
+
+    .glass-card { padding: 1.4rem; }
+
+    .table-glass thead th,
+    .table-glass tbody td { padding: 0.75rem 0.9rem; }
+}

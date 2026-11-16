@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Place Order | Joey Tahian</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="assets/css/style.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+</head>
+<body class="bg-light text-dark">
+
+    <!-- Navbar -->
+    <nav class="navbar navbar-expand-lg navbar-light navbar-glass">
+        <div class="container">
+            <a class="navbar-brand fw-bold fs-4 text-dark" href="index.html">
+                <i class="fa-solid fa-scissors me-2 text-gradient"></i>Joey Tahian
+            </a>
+            <button class="navbar-toggler border-0" type="button" data-bs-toggle="collapse" data-bs-target="#mainNav">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="mainNav">
+                <div class="ms-auto d-flex align-items-center gap-1">
+                    <a href="index.html" class="nav-link text-dark fw-semibold">Home</a>
+                    <a href="catalog.html" class="nav-link text-dark fw-semibold">Catalog</a>
+                    <a href="quote.html" class="nav-link text-dark fw-semibold">Quote</a>
+                    <a href="order.html" class="btn btn-modern ms-2 px-4">Place Order</a>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Page Header -->
+    <div class="container page-header animate-fade-up">
+        <h1 class="display-5 fw-bold mb-2">Place <span class="text-gradient">Your Order</span></h1>
+        <p class="text-secondary" style="max-width: 540px; font-size: 1rem;">
+            Pick from our available stock below, adjust quantities, and checkout via Cash on Delivery. We’ll email you a link to confirm your order.
+        </p>
+    </div>
+
+    <!-- Main -->
+    <div class="container pb-5">
+        <div class="row g-5">
+
+            <!-- Left: Product Grid -->
+            <div class="col-lg-8 animate-fade-up delay-1">
+                <div class="bento-grid" id="itemsContainer">
+                    <div class="text-secondary py-4">
+                        <span class="spinner-border spinner-border-sm me-2"></span> Loading items…
+                    </div>
+                </div>
+            </div>
+
+            <!-- Right: Checkout Form -->
+            <div class="col-lg-4 animate-fade-up delay-2">
+                <div class="glass-card position-sticky" style="top: 90px;">
+                    <h5 class="fw-bold mb-4" style="letter-spacing:-0.01em;">Your Checkout</h5>
+
+                    <form id="orderForm" novalidate>
+                        <!-- Full Name -->
+                        <div class="mb-3">
+                            <label class="form-label">Full Name</label>
+                            <input type="text" id="customer_name" class="form-control glass-input" required minlength="2" maxlength="100" autocomplete="name" placeholder="e.g. Maria Santos">
+                        </div>
+
+                        <!-- Email -->
+                        <div class="mb-3">
+                            <label class="form-label">Email Address</label>
+                            <input type="email" id="email" class="form-control glass-input" required maxlength="100" autocomplete="email" placeholder="name@example.com">
+                        </div>
+
+                        <!-- Mobile -->
+                        <div class="mb-3">
+                            <label class="form-label">Mobile Number</label>
+                            <input type="tel" id="mobile" class="form-control glass-input" required maxlength="30" pattern="(\+?63|0)?9[0-9]{9}" title="Enter a Philippine mobile number, such as 09171234567 or +639171234567" autocomplete="tel" placeholder="e.g. 09171234567">
+                        </div>
+
+                        <!-- Address -->
+                        <div class="mb-3">
+                            <label class="form-label">Shipping Address</label>
+                            <textarea id="address" class="form-control glass-input" rows="3" required minlength="8" maxlength="255" autocomplete="street-address" placeholder="House no., Street, Barangay, City…"></textarea>
+                        </div>
+
+                        <!-- Payment -->
+                        <div class="mb-4">
+                            <label class="form-label">Payment Method</label>
+                            <div class="glass-input d-flex align-items-center gap-2" style="border-radius: 10px !important;">
+                                <input class="form-check-input mt-0 flex-shrink-0" type="radio" name="payment_method" id="paymentCOD" value="COD" checked>
+                                <label class="form-check-label text-dark mb-0" for="paymentCOD" style="cursor:pointer;">
+                                    <i class="fa-solid fa-money-bill-wave me-2 text-success"></i>Cash on Delivery (COD)
+                                </label>
+                            </div>
+                        </div>
+
+                        <!-- Total -->
+                        <div class="d-flex justify-content-between align-items-center py-3 mb-3" style="border-top:1.5px solid var(--card-border); border-bottom:1.5px solid var(--card-border);">
+                            <span class="text-secondary fw-semibold">Total Estimate</span>
+                            <span class="fw-bold fs-4" id="orderTotal">₱0.00</span>
+                        </div>
+
+                        <!-- Error -->
+                        <div class="alert alert-danger d-none mb-3 p-3" id="orderError" role="alert" style="border-radius:10px; font-size:0.9rem;"></div>
+
+                        <!-- Submit -->
+                        <button type="submit" id="orderSubmit" class="btn btn-modern w-100 py-3 fw-bold fs-5 mb-3">
+                            Place Order <i class="fa-solid fa-arrow-right ms-2"></i>
+                        </button>
+
+                        <!-- Trust badges -->
+                        <div class="text-center text-secondary" style="font-size:0.8rem;">
+                            <div class="d-flex justify-content-center flex-wrap gap-3 mb-2">
+                                <span><i class="fa-solid fa-lock text-gradient me-1"></i>Secure</span>
+                                <span><i class="fa-solid fa-truck-fast text-gradient me-1"></i>Fast Delivery</span>
+                                <span><i class="fa-solid fa-shield-check text-gradient me-1"></i>Quality</span>
+                            </div>
+                            <span>Pay only when you receive your items.</span>
+                        </div>
+                    </form>
+                </div>
+            </div>
+
+        </div>
+    </div>
+
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="assets/js/api.js?v=5"></script>
+    <script src="assets/js/order.js?v=1"></script>
+</body>
+</html>
