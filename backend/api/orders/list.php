@@ -6,6 +6,7 @@ if ($_SERVER['REQUEST_METHOD'] !== 'GET') {
     json_error('Method not allowed', 405);
 }
 
+$pdo->exec('SET SESSION group_concat_max_len = 1000000');
 $stmt = $pdo->query("
     SELECT o.id, o.order_no, o.customer_name, o.email, o.mobile, o.address,
            o.total, o.payment_method, o.status, o.created_at,

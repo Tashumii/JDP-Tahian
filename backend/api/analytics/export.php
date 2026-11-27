@@ -1,16 +1,16 @@
 <?php
 require_once __DIR__ . '/../../config/db.php';
 require_once __DIR__ . '/../../includes/auth_guard.php';
-require_once __DIR__ . '/../../vendor/autoload.php';
-
-use PhpOffice\PhpSpreadsheet\Spreadsheet;
-use PhpOffice\PhpSpreadsheet\Writer\Xlsx;
+require_once __DIR__ . '/../../includes/response.php';
 
 if ($_SERVER['REQUEST_METHOD'] !== 'GET') {
-    die('Method not allowed');
+    json_error('Method not allowed', 405);
 }
 
 $period = $_GET['period'] ?? 'all';
+if (!in_array($period, ['all', 'day', 'week', 'month'], true)) {
+    $period = 'all';
+}
 
 $sql = "SELECT order_no, customer_name, email, mobile, address, total, payment_method, status, created_at FROM orders";
 $params = [];
@@ -27,39 +27,27 @@ $stmt = $pdo->prepare($sql);
 $stmt->execute($params);
 $orders = $stmt->fetchAll();
 
-$spreadsheet = new Spreadsheet();
-$sheet = $spreadsheet->getActiveSheet();
-$sheet->setTitle('Orders Report');
-
-$sheet->setCellValue('A1', 'Order No');
-$sheet->setCellValue('B1', 'Customer');
-$sheet->setCellValue('C1', 'Email');
-$sheet->setCellValue('D1', 'Mobile');
-$sheet->setCellValue('E1', 'Address');
-$sheet->setCellValue('F1', 'Total (₱)');
-$sheet->setCellValue('G1', 'Payment Method');
-$sheet->setCellValue('H1', 'Status');
-$sheet->setCellValue('I1', 'Date');
-
-$row = 2;
-foreach ($orders as $order) {
-    $sheet->setCellValue('A' . $row, $order['order_no']);
-    $sheet->setCellValue('B' . $row, $order['customer_name']);
-    $sheet->setCellValue('C' . $row, $order['email']);
-    $sheet->setCellValue('D' . $row, $order['mobile']);
-    $sheet->setCellValue('E' . $row, $order['address']);
-    $sheet->setCellValue('F' . $row, $order['total']);
-    $sheet->setCellValue('G' . $row, $order['payment_method']);
-    $sheet->setCellValue('H' . $row, $order['status']);
-    $sheet->setCellValue('I' . $row, $order['created_at']);
-    $row++;
-}
-
-header('Content-Type: application/vnd.openxmlformats-officedocument.spreadsheetml.sheet');
-header('Content-Disposition: attachment;filename="orders_report_' . date('Ymd_His') . '.xlsx"');
+$filename = 'orders_report_' . date('Ymd_His') . '.csv';
+header('Content-Type: text/csv; charset=UTF-8');
+header('Content-Disposition: attachment; filename="' . $filename . '"');
 header('Cache-Control: max-age=0');
 
-$writer = new Xlsx($spreadsheet);
-$writer->save('php://output');
-exit;
+$output = fopen('php://output', 'w');
+fputcsv($output, ['Order No', 'Customer', 'Email', 'Mobile', 'Address', 'Total', 'Payment Method', 'Status', 'Date']);
 
+foreach ($orders as $order) {
+    fputcsv($output, [
+        $order['order_no'],
+        $order['customer_name'],
+        $order['email'],
+        $order['mobile'],
+        $order['address'],
+        $order['total'],
+        $order['payment_method'],
+        $order['status'],
+        $order['created_at']
+    ]);
+}
+
+fclose($output);
+exit;

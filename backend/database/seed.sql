@@ -1,9 +1,8 @@
 USE joey_tahian;
 
--- Insert default admin user (password: password)
-INSERT INTO users (username, password_hash) VALUES 
-('admin', '$2y$10$92IXUNpkjO0rOQ5byMi.Ye4oKoEa3Ro9llC/.og/at2.uheWG/igi')
-ON DUPLICATE KEY UPDATE username=username;
+-- Do not seed a default admin account in production.
+-- Create the first admin manually, for example:
+-- INSERT INTO users (username, password_hash) VALUES ('admin', '<bcrypt hash from password_hash()>');
 
 -- Insert sample inventory
 INSERT INTO inventory (name, category, price, quantity, stage, item_condition, image_url) VALUES

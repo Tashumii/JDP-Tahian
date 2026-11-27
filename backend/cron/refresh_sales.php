@@ -1,5 +1,14 @@
 <?php
 // backend/cron/refresh_sales.php
+if (php_sapi_name() !== 'cli') {
+    $cronSecret = getenv('CRON_SECRET');
+    if (!$cronSecret || ($_GET['cron_secret'] ?? '') !== $cronSecret) {
+        http_response_code(403);
+        echo "Forbidden\n";
+        exit;
+    }
+}
+
 require_once __DIR__ . '/../config/db.php';
 
 // Helper function to insert/update period
@@ -43,8 +52,12 @@ try {
     $yearData = $stmt->fetch();
     refreshPeriod($pdo, 'year', $year_start, $yearData['c'], $yearData['s']);
     
+    // Expire unconfirmed pending orders and release reserved stock.
+    require_once __DIR__ . '/expire_orders.php';
+
     echo "Sales summary refreshed successfully.\n";
 } catch (Exception $e) {
-    echo "Error: " . $e->getMessage() . "\n";
+    error_log('Sales summary refresh failed: ' . $e->getMessage());
+    echo "We could not refresh sales data right now.\n";
 }
 

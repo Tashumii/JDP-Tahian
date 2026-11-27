@@ -5,7 +5,10 @@ function sanitize_input($data) {
     if (is_array($data)) {
         return array_map('sanitize_input', $data);
     }
-    return htmlspecialchars(strip_tags(trim($data)), ENT_QUOTES, 'UTF-8');
+    if ($data === null) {
+        return '';
+    }
+    return htmlspecialchars(strip_tags(trim((string)$data)), ENT_QUOTES, 'UTF-8');
 }
 
 function require_fields($data, $fields) {

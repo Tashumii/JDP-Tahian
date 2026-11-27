@@ -1,13 +1,27 @@
 $(function() {
+    const itemsById = {};
+
+    function safeImageUrl(value) {
+        try {
+            const url = new URL(value, window.location.href);
+            return ['http:', 'https:'].includes(url.protocol) ? url.href : '';
+        } catch (error) {
+            return '';
+        }
+    }
+
     function loadInventory() {
         api('inventory/list.php').done(function(res) {
             let tbody = $('#inventoryTable tbody');
             tbody.empty();
-            res.data.forEach(item => {
+            Object.keys(itemsById).forEach(key => delete itemsById[key]);
+            (res.data || []).forEach(item => {
+                itemsById[item.id] = item;
                 let badgeClass = item.item_condition === 'new' ? 'bg-success bg-opacity-10 text-success border border-success' : 
                                (item.item_condition === 'returned_good' ? 'bg-warning bg-opacity-10 text-warning border border-warning' : 'bg-danger bg-opacity-10 text-danger border border-danger');
-                let imgHtml = item.image_url 
-                    ? `<img src="${item.image_url}" alt="item" style="width: 40px; height: 40px; object-fit: cover; border-radius: 8px;">`
+                const src = safeImageUrl(item.image_url || '');
+                let imgHtml = src 
+                    ? `<img src="${$('<div>').text(src).html()}" alt="item" style="width: 40px; height: 40px; object-fit: cover; border-radius: 8px;">`
                     : `<div style="width: 40px; height: 40px; background: rgba(0,0,0,0.05); border-radius: 8px; display: flex; align-items: center; justify-content: center;"><i class="fa-solid fa-image text-secondary"></i></div>`;
                 
                 let tr = `<tr>
@@ -20,7 +34,7 @@ $(function() {
                     <td>${item.stage.replace('_', ' ')}</td>
                     <td><span class="badge ${badgeClass} text-uppercase">${item.item_condition.replace('_', ' ')}</span></td>
                     <td>
-                        <button class="btn btn-sm btn-outline-info btn-edit rounded-pill" data-item='${JSON.stringify(item)}'>Edit</button>
+                        <button class="btn btn-sm btn-outline-info btn-edit rounded-pill" data-id="${item.id}">Edit</button>
                         <button class="btn btn-sm btn-outline-warning btn-return rounded-pill" data-id="${item.id}">Return</button>
                     </td>
                 </tr>`;
@@ -38,7 +52,8 @@ $(function() {
     });
 
     $(document).on('click', '.btn-edit', function() {
-        let item = $(this).data('item');
+        let item = itemsById[$(this).data('id')];
+        if (!item) return;
         $('#itemId').val(item.id);
         $('#itemName').val(item.name);
         $('#itemImageUrl').val(item.image_url || '');
@@ -77,6 +92,7 @@ $(function() {
 
     $('#logoutBtn').click(function() {
         api('auth/logout.php', 'POST').done(function() {
+            sessionStorage.removeItem('joey_csrf_token');
             window.location.href = 'login.html';
         });
     });

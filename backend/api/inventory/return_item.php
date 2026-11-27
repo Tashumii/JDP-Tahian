@@ -10,6 +10,11 @@ if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
 $input = sanitize_input($_POST);
 require_fields($input, ['id', 'quantity', 'condition']);
 
+$quantity = filter_var($input['quantity'], FILTER_VALIDATE_INT, ['options' => ['min_range' => 1]]);
+if ($quantity === false) {
+    json_error('Quantity must be a positive whole number.', 400);
+}
+
 if (!in_array($input['condition'], ['returned_good', 'returned_damaged'])) {
     json_error('Invalid condition for return', 400);
 }
@@ -23,6 +28,10 @@ if (!$item) {
     json_error('Item not found', 404);
 }
 
+if ($quantity > (int)$item['quantity']) {
+    json_error('Return quantity cannot exceed available stock.', 400);
+}
+
 // Option A: Update existing item (if condition matches) 
 // Option B: Create a new inventory row for returned items to separate them from "new" stock
 // The plan says "log + categorize return". Let's insert as a new row so it's tracked separately, 
@@ -34,7 +43,7 @@ $stmt->execute([
     $item['name'] . ' (Return)', 
     $item['category'], 
     $item['price'], // maybe discounted? keep same for now
-    $input['quantity'], 
+    $quantity, 
     'on_hand', 
     $input['condition']
 ]);

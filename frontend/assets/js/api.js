@@ -5,11 +5,18 @@ function api(url, method = 'GET', data = {}) {
     // This works whether the app is in localhost/joey-tahian/ or just localhost/
     let basePath = window.location.pathname.split('/frontend/')[0] + '/backend/api/';
     
+    const headers = {};
+    if (method && method.toUpperCase() !== 'GET') {
+        const csrfToken = sessionStorage.getItem('joey_csrf_token');
+        if (csrfToken) headers['X-CSRF-Token'] = csrfToken;
+    }
+
     return $.ajax({
         url: basePath + url,
         method: method,
         data: data,
-        dataType: 'json'
+        dataType: 'json',
+        headers: headers
     }).fail(function(jqXHR) {
         let msg = 'An error occurred';
         if (jqXHR.responseJSON && jqXHR.responseJSON.message) {

@@ -88,8 +88,13 @@
                             ? `<span class="product-stock text-success bg-success bg-opacity-10 border border-success border-opacity-25"><i class="fa-solid fa-check"></i> In Stock</span>`
                             : `<span class="product-stock text-danger bg-danger bg-opacity-10 border border-danger border-opacity-25"><i class="fa-solid fa-xmark"></i> Out of Stock</span>`;
 
-                        let imgHtml = item.image_url
-                            ? `<img src="${item.image_url}" alt="${$('<div>').text(item.name).html()}" class="w-100 mb-4" style="border-radius:12px;height:180px;object-fit:cover;">`
+                        let safeSrc = '';
+                        try {
+                            const parsed = new URL(item.image_url, window.location.href);
+                            if (['http:', 'https:'].includes(parsed.protocol)) safeSrc = parsed.href;
+                        } catch (e) { safeSrc = ''; }
+                        let imgHtml = safeSrc
+                            ? `<img src="${$('<div>').text(safeSrc).html()}" alt="${$('<div>').text(item.name).html()}" class="w-100 mb-4" style="border-radius:12px;height:180px;object-fit:cover;">`
                             : `<div class="w-100 mb-4 d-flex align-items-center justify-content-center" style="border-radius:12px;height:180px;background:rgba(0,0,0,0.04);"><i class="fa-solid fa-image fs-1 text-secondary opacity-30"></i></div>`;
 
                         let card = `

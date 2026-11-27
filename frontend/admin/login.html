@@ -56,6 +56,9 @@
                     username: $('#username').val(),
                     password: $('#password').val()
                 }).done(function(res) {
+                    if (res.data && res.data.csrf_token) {
+                        sessionStorage.setItem('joey_csrf_token', res.data.csrf_token);
+                    }
                     if (res.status === 'success') window.location.href = 'dashboard.html';
                 }).fail(function(jqXHR) {
                     let msg = jqXHR.responseJSON ? jqXHR.responseJSON.message : 'Login failed. Check your credentials.';

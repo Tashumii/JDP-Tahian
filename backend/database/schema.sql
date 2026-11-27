@@ -58,6 +58,12 @@ CREATE TABLE IF NOT EXISTS order_items (
   FOREIGN KEY (inventory_id) REFERENCES inventory(id)
 );
 
+CREATE TABLE IF NOT EXISTS settings (             -- app settings
+  setting_key VARCHAR(100) PRIMARY KEY,
+  setting_value TEXT,
+  updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
+);
+
 CREATE TABLE IF NOT EXISTS sales_summary (         -- D4
   id INT AUTO_INCREMENT PRIMARY KEY,
   period_type ENUM('day','week','month','year') NOT NULL,

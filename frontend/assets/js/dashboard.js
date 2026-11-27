@@ -87,6 +87,7 @@ $(function() {
 
     $('#logoutBtn').click(function() {
         api('auth/logout.php', 'POST').done(function() {
+            sessionStorage.removeItem('joey_csrf_token');
             window.location.href = 'login.html';
         });
     });

@@ -20,6 +20,7 @@
                     <li class="nav-item"><a class="nav-link fw-semibold text-secondary" href="orders.html"><i class="fa-solid fa-cart-flatbed me-2"></i>Orders</a></li>
                     <li class="nav-item"><a class="nav-link fw-bold text-dark" href="quotes.html"><i class="fa-solid fa-file-invoice-dollar me-2"></i>Quotes</a></li>
                     <li class="nav-item"><a class="nav-link fw-semibold text-secondary" href="reports.html"><i class="fa-solid fa-file-export me-2"></i>Reports</a></li>
+                    <li class="nav-item"><a class="nav-link fw-semibold text-secondary" href="settings.html"><i class="fa-solid fa-gear me-2"></i>Settings</a></li>
                 </ul>
                 <button class="btn btn-outline-dark btn-sm rounded-pill px-4" id="logoutBtn"><i class="fa-solid fa-power-off me-2"></i>Logout</button>
             </div>
@@ -111,7 +112,7 @@
                     });
             });
             $('#logoutBtn').on('click', function() {
-                api('auth/logout.php', 'POST').done(function() { window.location.href = 'login.html'; });
+                api('auth/logout.php', 'POST').done(function() { sessionStorage.removeItem('joey_csrf_token'); window.location.href = 'login.html'; });
             });
         });
     </script>

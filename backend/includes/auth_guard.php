@@ -7,11 +7,11 @@ if (!isset($_SESSION['admin_id'])) {
     json_error('Unauthorized. Please log in.', 401);
 }
 
-// Optional: simple CSRF check for POST requests if implemented
-// if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-//     $headers = getallheaders();
-//     if (!isset($headers['X-CSRF-Token']) || $headers['X-CSRF-Token'] !== $_SESSION['csrf_token']) {
-//         json_error('Invalid CSRF token.', 403);
-//     }
-// }
+// Enforce CSRF protection for state-changing requests.
+if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+    $csrfToken = $_SERVER['HTTP_X_CSRF_TOKEN'] ?? '';
+    if (!isset($_SESSION['csrf_token']) || !hash_equals($_SESSION['csrf_token'], $csrfToken)) {
+        json_error('Invalid CSRF token.', 403);
+    }
+}
 

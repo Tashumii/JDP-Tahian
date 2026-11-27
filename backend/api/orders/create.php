@@ -87,7 +87,8 @@ try {
             throw new DomainException('Not enough stock for ' . $inventoryItem['name'] . '. Please adjust the quantity.');
         }
 
-        $unitPriceCents = (int)round((float)$inventoryItem['price'] * 100);
+        $priceParts = explode('.', (string)$inventoryItem['price'], 2);
+        $unitPriceCents = ((int)$priceParts[0] * 100) + (int)str_pad($priceParts[1] ?? '0', 2, '0');
         if ($unitPriceCents < 1) {
             throw new DomainException($inventoryItem['name'] . ' is not currently available to order.');
         }
@@ -99,7 +100,7 @@ try {
             'id' => (int)$inventoryItem['id'],
             'name' => $inventoryItem['name'],
             'qty' => $item['qty'],
-            'unit_price' => number_format($unitPriceCents / 100, 2, '.', '')
+            'unit_price' => sprintf('%d.%02d', intdiv($unitPriceCents, 100), abs($unitPriceCents) % 100)
         ];
     }
 
@@ -108,7 +109,7 @@ try {
     }
 
     $orderNo = 'ORD-' . strtoupper(bin2hex(random_bytes(8)));
-    $total = number_format($totalCents / 100, 2, '.', '');
+    $total = sprintf('%d.%02d', intdiv($totalCents, 100), abs($totalCents) % 100);
     $confirmationToken = bin2hex(random_bytes(32));
     $confirmationTokenHash = hash('sha256', $confirmationToken);
     $confirmationExpiresAt = gmdate('Y-m-d H:i:s', time() + 86400);

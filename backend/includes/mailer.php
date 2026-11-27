@@ -25,6 +25,47 @@ function get_mail_settings() {
         'app_base_url' => rtrim(trim((string)$value('APP_BASE_URL', 'app_base_url')), '/')
     ];
 
+    // Allow admin-configured settings stored in the database to override env/local config.
+    try {
+        if (!isset($pdo)) {
+            require_once __DIR__ . '/../config/db.php';
+        }
+        if (isset($pdo) && $pdo instanceof PDO) {
+            $dbKeys = ['mail_smtp_host', 'mail_smtp_port', 'mail_smtp_username', 'mail_smtp_password',
+                'mail_smtp_encryption', 'mail_from_email', 'mail_from_name', 'mail_app_base_url'];
+            $placeholders = implode(',', array_fill(0, count($dbKeys), '?'));
+            $stmt = $pdo->prepare("SELECT setting_key, setting_value FROM settings WHERE setting_key IN ($placeholders)");
+            $stmt->execute($dbKeys);
+            $dbValues = [];
+            foreach ($stmt->fetchAll(PDO::FETCH_ASSOC) as $row) {
+                $dbValues[$row['setting_key']] = $row['setting_value'];
+            }
+            $map = [
+                'mail_smtp_host' => 'smtp_host',
+                'mail_smtp_port' => 'smtp_port',
+                'mail_smtp_username' => 'smtp_username',
+                'mail_smtp_password' => 'smtp_password',
+                'mail_smtp_encryption' => 'smtp_encryption',
+                'mail_from_email' => 'from_email',
+                'mail_from_name' => 'from_name',
+                'mail_app_base_url' => 'app_base_url'
+            ];
+            foreach ($map as $dbKey => $settingKey) {
+                if (array_key_exists($dbKey, $dbValues) && $dbValues[$dbKey] !== null && $dbValues[$dbKey] !== '') {
+                    if ($settingKey === 'smtp_port') {
+                        $settings[$settingKey] = (int)$dbValues[$dbKey];
+                    } else {
+                        $settings[$settingKey] = $settingKey === 'smtp_encryption'
+                            ? strtolower(trim((string)$dbValues[$dbKey]))
+                            : trim((string)$dbValues[$dbKey]);
+                    }
+                }
+            }
+        }
+    } catch (Throwable $e) {
+        // Fall back to env/local config if settings table is unavailable.
+    }
+
     if ($settings['from_email'] === '' && $settings['smtp_username'] !== '') {
         $settings['from_email'] = $settings['smtp_username'];
     }
